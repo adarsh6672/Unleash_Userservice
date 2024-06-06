@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Unleash CI CD pipeline
+name: CI pipeline
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
     - name: Build & push Docker image
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
-        image: adarsh6672/unleash-userservice
+        image: adarsh6672/unleash-articleservice
         tags: latest
         registry: docker.io
         dockerfile: Dockerfile
