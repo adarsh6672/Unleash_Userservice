@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user/counselor")
+@RequestMapping("/api/user/counselor")
 public class CounselorController {
 
     private final CounselorService counselorService;
