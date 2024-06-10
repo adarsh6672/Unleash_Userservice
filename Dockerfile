@@ -1,18 +1,16 @@
 FROM openjdk:17-jdk-alpine
 ARG JAR_FILE=target/*.jar
+COPY ./target/user-service.jar user-service.jar
+
 ARG MYSQL_HOST
 ARG MYSQL_PORT
-ARG MYSQL_DB_NAME
 ARG MYSQL_USER
 ARG MYSQL_PASSWORD
 
+ENV EUREKA_HOST=discovery-service
 ENV MYSQL_HOST=${MYSQL_HOST}
 ENV MYSQL_PORT=${MYSQL_PORT}
-ENV MYSQL_DB_NAME=${MYSQL_DB_NAME}
 ENV MYSQL_USER=${MYSQL_USER}
 ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
-
-COPY ./target/user-service.jar user-service.jar
-
 
 ENTRYPOINT ["java","-jar","/user-service.jar"]
