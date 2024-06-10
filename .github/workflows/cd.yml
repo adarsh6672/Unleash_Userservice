@@ -14,7 +14,7 @@ jobs:
       - name: pull docker image
         run:  docker pull adarsh6672/unleash-userservice
       - name: delete old docker image
-        run:  docker rm -f userservice || true
+        run:  docker rm -f user-service || true
       - name: run docker container
-        run:  docker run -d -p 8081:8081 --name userservice --network compose_app-network adarsh6672/unleash-userservice
+        run:  docker run -d -p 8081:8081 --name user-service --network compose_app-network adarsh6672/unleash-userservice
 
