@@ -12,9 +12,9 @@ spring:
     multipart.max-file-size: 20MB
     multipart.max-request-size: 20MB
   dataSource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB_NAME:unleash_userservice}
-    username: ${MYSQL_USER:root}
-    password: ${MYSQL_PASSWORD:root}
+    url: jdbc:mysql://${secrets.MYSQL_HOST:localhost}:${secrets.MYSQL_PORT:3306}/${MYSQL_DB_NAME:unleash_userservice}
+    username: ${secrets.MYSQL_USER:root}
+    password: ${secrets.MYSQL_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
