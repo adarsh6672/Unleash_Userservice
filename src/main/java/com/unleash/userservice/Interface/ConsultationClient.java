@@ -10,6 +10,6 @@ import java.util.List;
 @FeignClient(name = "consultation-service" )
 public interface ConsultationClient {
 
-    @GetMapping("/consultation/counselor/get-available-counselors")
+    @GetMapping("/api/consultation/counselor/get-available-counselors")
     public ResponseEntity<List<AvilabilityDto>> findAvailableCounselors();
 }
