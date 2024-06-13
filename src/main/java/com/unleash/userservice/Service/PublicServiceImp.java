@@ -2,11 +2,11 @@ package com.unleash.userservice.Service;
 
 import com.unleash.userservice.DTO.AvilabilityDto;
 import com.unleash.userservice.DTO.CounselorDTO;
+import com.unleash.userservice.DTO.FilterDTO;
 import com.unleash.userservice.DTO.UserDto;
 import com.unleash.userservice.Model.CounselorData;
 import com.unleash.userservice.Model.User;
-import com.unleash.userservice.Reposetory.CounselorDateRepository;
-import com.unleash.userservice.Reposetory.UserRepository;
+import com.unleash.userservice.Reposetory.*;
 import com.unleash.userservice.Interface.ConsultationClient;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,12 @@ public class PublicServiceImp {
     private CounselorDateRepository counselorDateRepository;
     @Autowired
     private ConsultationClient consultationClient;
+    @Autowired
+    private LanguageRepository languageRepository;
+    @Autowired
+    private GenderRepository genderRepository;
+    @Autowired
+    private SpecializationRepository specializationRepository;
 
 
     public List findAvilableCounselors(){
@@ -103,5 +109,57 @@ public class PublicServiceImp {
         }catch (Exception e){
             return ResponseEntity.notFound().build();
         }
+    }
+
+    public ResponseEntity<?> filterCounselor(FilterDTO filter) {
+            List<CounselorData> counselorData = counselorDateRepository.findByIsVerifiedTrue();
+//            List<CounselorDTO> userDtos = counselorData.stream()
+//                .map(user -> modelMapper.map(user, CounselorDTO.class))
+//                .collect(Collectors.toList());
+            // Apply filtering based on the provided filter parameters
+        if (filter.getName() != null) {
+            counselorData = counselorData.stream()
+                    .filter(cd -> cd.getUser().getFullname().toLowerCase().contains(filter.getName().toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+            if (filter.getGender() != 0) {
+                counselorData = counselorData.stream()
+                        .filter(cd -> cd.getGender().equals(genderRepository.findById(filter.getGender()).orElse(null)))
+                        .collect(Collectors.toList());
+            }
+            if (filter.getLanguage() != 0) {
+                counselorData = counselorData.stream()
+                        .filter(cd -> cd.getLanguages().contains(languageRepository.findById(filter.getLanguage()).orElse(null)))
+                        .collect(Collectors.toList());
+            }
+            if (filter.getSpecialization() != 0) {
+                counselorData = counselorData.stream()
+                        .filter(cd -> cd.getSpecializations().contains(specializationRepository.findById(filter.getSpecialization()).orElse(null)))
+                        .collect(Collectors.toList());
+            }
+
+            List<CounselorDTO> userDtos = counselorData.stream()
+                    .map(user -> modelMapper.map(user, CounselorDTO.class))
+                    .collect(Collectors.toList());
+
+            List<AvilabilityDto> avilabilityDtos = null;
+            try {
+                avilabilityDtos = consultationClient.findAvailableCounselors().getBody();
+            } catch (Exception e) {
+                System.out.println("server error");
+            }
+
+            for (CounselorDTO dto : userDtos) {
+                AvilabilityDto next = avilabilityDtos.stream()
+                        .filter(data -> data.getUserId() == dto.getUser().getId()).findFirst().orElse(null);
+                if (next != null) {
+                    dto.setNextAvailable(next.getSlot().toString());
+                } else {
+                    dto.setNextAvailable(null);
+                }
+            }
+
+            return ResponseEntity.ok().body(userDtos);
+
     }
 }

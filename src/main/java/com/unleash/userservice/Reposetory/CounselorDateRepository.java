@@ -14,4 +14,6 @@ public interface CounselorDateRepository extends JpaRepository<CounselorData , I
     List<CounselorData> findByIsVerifiedTrue();
 
     List<CounselorData> findByIsVerifiedFalse();
+
+
 }

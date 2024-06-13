@@ -1,5 +1,6 @@
 package com.unleash.userservice.controller;
 
+import com.unleash.userservice.DTO.FilterDTO;
 import com.unleash.userservice.Service.CloudinaryServiceImp;
 import com.unleash.userservice.Service.PublicServiceImp;
 import com.unleash.userservice.Service.services.CounselorService;
@@ -34,6 +35,12 @@ public class PublicController {
     @GetMapping("/get-available-counsellors")
     public ResponseEntity<?> getAllAvailableCounsellors(){
         return ResponseEntity.ok().body(publicServiceImp.findAvilableCounselors());
+    }
+
+    @PostMapping("/get-filter-counselors")
+    public ResponseEntity<?> getCounselorByfilter(@RequestBody FilterDTO filter){
+        System.out.println(filter);
+        return publicServiceImp.filterCounselor(filter);
     }
 
     @GetMapping("/get-user")
